@@ -1,0 +1,16 @@
+# secrets
+.env
+*.session
+
+# runtime data
+data/*
+!data/.gitkeep
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# os
+.DS_Store
