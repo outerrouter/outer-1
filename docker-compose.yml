@@ -1,0 +1,10 @@
+services:
+  offerradar:
+    build: .
+    env_file: .env
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8000:8000"      # local only; put an https reverse proxy (Caddy/nginx) in front to use it from your phone
+    volumes:
+      - ./data:/srv/data
+      - ./config:/srv/config:ro
