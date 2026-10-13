@@ -1,0 +1,33 @@
+# Non-secret settings. Secrets (keys, tokens) live only in .env.
+app_name: OfferRadar          # rename the app here
+
+ai:
+  rpm: 10                     # requests per minute we allow ourselves (your limit is 10-14)
+  daily_total: 2000           # requests per day, all kinds together
+  shares:                     # how the daily budget is split
+    parse: 500                # reading messy posts (batched, 10 posts per request)
+    deep: 600                 # deep product checks
+    chat: 500                 # your chat + button-triggered checks
+    alert: 300                # check just before an alert is sent
+    reserve: 100              # extra, only chat/alert may use it
+  cache_hours: 6
+
+telegram:
+  mode: all                   # all = every channel/group you joined | whitelist = only the names under "allow"
+  allow: []                   # e.g. ["Offerzone 4.0", "somechannel_username"]
+  deny: []                    # channels to ignore
+  save_images: true           # keep the product photo attached to a post
+
+pipeline:
+  stale_hours: 12             # no repost for this long -> marked "may be over"
+  probe_links: true           # one polite status check per new link (404 = dead)
+  alert_min_score: 70         # free-deal alerts only above this score (needs several channels to agree)
+  free_alerts: true
+  alerts_per_hour: 12         # hard cap, no alert storms
+  retention_days: 7           # raw posts are deleted after this
+
+profile:
+  budget_max: null
+  interests: []
+
+# extra_shorteners: ["example.in"]   # shortener domains the app may follow (it never opens other unknown links)
