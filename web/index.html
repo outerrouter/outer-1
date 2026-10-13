@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#15122b">
+<title>OfferRadar</title>
+<link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+
+<main id="login" class="login" hidden>
+  <form id="loginForm" class="login-card">
+    <div class="stage small" aria-hidden="true"><div class="cube"><i>₹</i><i>%</i><i>✓</i><i>⚡</i><i>★</i><i>🔔</i></div></div>
+    <h1>OfferRadar</h1>
+    <p>আপনার নিজস্ব deal পাহারাদার। চালিয়ে যেতে পাসওয়ার্ড দিন।</p>
+    <label for="pw">পাসওয়ার্ড (.env ফাইলের APP_TOKEN)</label>
+    <input id="pw" type="password" autocomplete="current-password" required>
+    <button class="btn primary" type="submit">ঢুকুন</button>
+    <p id="loginErr" class="err" role="alert"></p>
+  </form>
+</main>
+
+<div id="app" hidden>
+  <header class="top">
+    <div class="brand"><span class="mark" aria-hidden="true"></span><span id="appName">OfferRadar</span></div>
+    <form class="search" id="searchForm" role="search">
+      <input id="q" type="search" placeholder="পণ্য খুঁজুন, যেমন boat earbuds" aria-label="পণ্য খুঁজুন" autocomplete="off">
+    </form>
+    <span class="livedot" id="liveDot" title="লাইভ সংযোগ" role="img" aria-label="লাইভ সংযোগের অবস্থা"></span>
+  </header>
+
+  <nav class="nav" id="nav" aria-label="প্রধান মেনু">
+    <button data-tab="deals" class="on"><svg viewBox="0 0 24 24"><path d="M3 12l9-9h8v8l-9 9z"/><circle cx="15.5" cy="8.5" r="1.3"/></svg><span>ডিল</span></button>
+    <button data-tab="watch"><svg viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 1112 0v6l2 2H4z"/><path d="M10 21h4"/></svg><span>নজরে</span></button>
+    <button data-tab="chat" class="center"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8.5 9.5h7M8.5 12.5h4"/></svg><span>AI চ্যাট</span></button>
+    <button data-tab="live"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg><span>লাইভ</span></button>
+    <button data-tab="more"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span>সেটিংস</span></button>
+  </nav>
+
+  <div class="views">
+    <section id="v-deals" class="view">
+      <div class="hero">
+        <div class="stage" aria-hidden="true">
+          <div class="orbit"></div>
+          <div class="cube"><i>₹</i><i>%</i><i>✓</i><i>⚡</i><i>★</i><i>🔔</i></div>
+          <div class="floor"></div>
+        </div>
+        <div class="hero-text">
+          <h1 id="heroTitle">deal রাডার চালু</h1>
+          <p id="heroSub">Telegram থেকে আসা offer এখানে যাচাই হয়ে জমা হয়।</p>
+          <p class="ticker" id="ticker" aria-live="polite"></p>
+        </div>
+      </div>
+      <div class="filters" id="filters">
+        <div class="seg" data-key="status" role="group" aria-label="অবস্থা">
+          <button data-v="live" class="on">চালু</button><button data-v="free">ফ্রি / লুট</button><button data-v="ended">শেষ</button>
+        </div>
+        <div class="seg" data-key="platform" role="group" aria-label="দোকান">
+          <button data-v="" class="on">সব</button><button data-v="amazon">Amazon</button><button data-v="flipkart">Flipkart</button><button data-v="meesho">Meesho</button>
+        </div>
+        <label class="sort">সাজান
+          <select id="sort"><option value="score">সেরা আগে</option><option value="new">নতুন আগে</option><option value="discount">বেশি ছাড়</option><option value="price">কম দাম</option></select>
+        </label>
+      </div>
+      <div id="grid" class="grid" aria-live="polite"></div>
+    </section>
+
+    <section id="v-watch" class="view" hidden>
+      <h2 class="vt">নজরে রাখা পণ্য</h2>
+      <form id="taskForm" class="panel row">
+        <label>কী চান<input id="tText" required maxlength="200" placeholder="boat airdopes earbuds"></label>
+        <label>সর্বোচ্চ দাম (₹)<input id="tPrice" type="number" min="0" inputmode="numeric" placeholder="১০০০"></label>
+        <label>দোকান<select id="tPlat"><option value="">যেকোনো</option><option value="amazon">Amazon</option><option value="flipkart">Flipkart</option><option value="meesho">Meesho</option></select></label>
+        <button class="btn primary" type="submit">নজর রাখুন</button>
+      </form>
+      <ul id="taskList" class="tasks"></ul>
+    </section>
+
+    <section id="v-chat" class="view" hidden>
+      <div id="msgs" class="msgs" aria-live="polite"></div>
+      <div class="sugg" id="sugg">
+        <button>আজকের সেরা deal কোনগুলো?</button><button>ফ্রি offer কী কী আছে?</button><button>boat earbuds ১০০০ টাকার নিচে চাই</button>
+      </div>
+      <form id="chatForm" class="chatbar">
+        <input id="chatIn" maxlength="500" placeholder="যা জানতে বা করতে চান লিখুন…" autocomplete="off" aria-label="মেসেজ">
+        <button class="btn primary" type="submit">পাঠান</button>
+      </form>
+    </section>
+
+    <section id="v-live" class="view" hidden>
+      <h2 class="vt">এখন কী হচ্ছে</h2>
+      <div class="live-grid">
+        <ul id="feed" class="feed"></ul>
+        <div>
+          <div class="panel" id="usage"></div>
+          <div class="panel" id="services"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="v-more" class="view" hidden>
+      <h2 class="vt">সেটিংস</h2>
+      <form id="profileForm" class="panel row">
+        <label>আপনার সর্বোচ্চ বাজেট (₹)<input id="pBudget" type="number" min="0" inputmode="numeric"></label>
+        <label>পছন্দের বিষয় (কমা দিয়ে)<input id="pInterests" maxlength="300" placeholder="earbuds, kurti, smartwatch"></label>
+        <button class="btn" type="submit">সংরক্ষণ</button>
+      </form>
+      <div class="panel">
+        <h3>পরীক্ষা করুন</h3>
+        <p class="mut">Telegram যুক্ত করার আগে একটা post পেস্ট করে দেখুন সিস্টেম কী বোঝে।</p>
+        <form id="ingestForm"><textarea id="iText" rows="4" maxlength="3000" placeholder="🔥 boAt Airdopes 141 @ ₹999 (MRP ₹4490)&#10;https://www.amazon.in/dp/B0XXXXXXXX"></textarea>
+        <div class="row-btns"><button class="btn primary" type="submit">post পাঠান</button><button class="btn" type="button" id="demoBtn">demo ডেটা লোড করুন</button></div></form>
+      </div>
+      <div class="panel"><h3>Channel-এর বিশ্বাসযোগ্যতা</h3><div id="chanTable" class="chan"></div></div>
+      <button class="btn danger" id="logout" type="button">বের হন</button>
+    </section>
+  </div>
+</div>
+
+<dialog id="dlg" aria-label="deal-এর বিস্তারিত"></dialog>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<script src="/assets/app.js"></script>
+</body>
+</html>
